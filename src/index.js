@@ -46,14 +46,16 @@ refs.search.addEventListener('submit', onFormSubmit);
 
 async function onFormSubmit(event) {
   event.preventDefault();
-  currentPage = 1;
+  page = 1;
   refs.gallery.innerHTML = '';
   query = event.target.elements.searchQuery.value;
 
   getImages(query)
     .then(data => {
       maxPage = Math.ceil(data.data.totalHits / perPage);
-      
+      Notify.success(
+            `You can see ${data.data.totalHits} images`
+          );
       if (!data.data.hits.length) {
         throw new Error();
       }
