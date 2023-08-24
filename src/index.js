@@ -1,7 +1,7 @@
 import axios from 'axios';
-// import SimpleLightbox from 'simplelightbox';
-// import 'simplelightbox/dist/simple-lightbox.min.css';
-import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import '../node_modules/simplelightbox/dist/simple-lightbox.min.css';
+import { Notify } from 'notiflix';
 
 const BASEURL = 'https://pixabay.com/api/';
 
@@ -17,6 +17,8 @@ let maxPage = 1;
 let query = '';
 let currentPage = 1;
 const perPage = 40;
+
+const lightbox = new SimpleLightbox('.gallery a');
 
 function getImages(query) {
   const params = new URLSearchParams({
@@ -40,27 +42,21 @@ function onFormSubmit(event) {
   refs.gallery.innerHTML = '';
   query = event.target.elements.searchQuery.value;
 
-  //   console.log(getImages(query));
   getImages(query)
     .then(data => {
-      // console.log(data.data.totalHits);
       maxPage = Math.ceil(data.data.totalHits / perPage);
-      // console.log(maxPage);
-      // console.log(data.data.hits.length);
+
       if (!data.data.hits.length) {
         throw new Error(
           'Sorry, there are no images matching your search query. Please try again.'
         );
       }
-      // page += 1;
       renderCards(data.data.hits);
 
-      // currentPage += 1;
       refs.search.reset();
     })
     .catch(err => {
-      // console.log(err.message);
-      Notiflix.Notify.failure(`${err.message}`);
+      Notify.failure(`${err.message}`);
     });
 }
 
@@ -75,7 +71,8 @@ function templateCard({
 }) {
   return `
       <div class="photo-card">
-      <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+      <a href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" loading="lazy" /></a>
+      
       <div class="info">
         <p class="info-item">
           <b>Likes: ${likes}</b>
@@ -95,19 +92,14 @@ function templateCard({
 
 function renderCards(hits) {
   const markup = hits.map(templateCard).join('');
-  //   refs.gallery.innerHTML = markup;
   refs.gallery.insertAdjacentHTML('beforeend', markup);
 }
 
 function callback(entries, observer) {
   entries.forEach(entry => {
-    // console.log(entry.isIntersecting);
-    // console.log(refs.gallery.innerHTML);
     if (entry.isIntersecting && refs.gallery.innerHTML !== '') {
-      // console.log(currentPage);
-      // console.log(maxPage);
       if (currentPage === maxPage) {
-        Notiflix.Notify.failure(
+        Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );
         return;
@@ -126,12 +118,13 @@ function callback(entries, observer) {
           // console.log(`${currentPage} of ${maxPage}`);
         })
         .catch(err => {
-          Notiflix.Notify.failure(
+          Notify.failure(
             `Sorry, there are no images matching your search query. Please try again.`
           );
         });
     }
   });
+  lightbox.refresh()
 }
 const observer = new IntersectionObserver(callback);
 observer.observe(refs.observerTarget);
