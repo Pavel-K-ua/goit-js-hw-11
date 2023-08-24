@@ -33,10 +33,10 @@ async function onFormSubmit(event) {
     getImages(query, page)
       .then(data => {
         maxPage = Math.ceil(data.data.totalHits / per_page);
-        Notify.success(`You can see ${data.data.totalHits} images`);
         if (!data.data.hits.length) {
           throw new Error();
         }
+        Notify.success(`You can see ${data.data.totalHits} images`);
         renderCards(data.data.hits);
         page += 1;
         refs.search.reset();
