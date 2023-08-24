@@ -20,7 +20,7 @@ const perPage = 40;
 
 const lightbox = new SimpleLightbox('.gallery a');
 
-function getImages(query) {
+async function getImages(query) {
   const params = new URLSearchParams({
     key: '39023312-2f71f46960a1d00fee06a2093',
     per_page,
@@ -31,12 +31,20 @@ function getImages(query) {
   });
   page += 1;
   // console.log(`${BASEURL}?${params}&q=${query}`);
-  return axios.get(`${BASEURL}?${params}&q=${query}`);
+
+  try {
+      const response = await axios.get(`${BASEURL}?${params}&q=${query}`)
+    return response;
+  } catch (error) {
+    // Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+    console.log(error);
+  }
+
 }
 
 refs.search.addEventListener('submit', onFormSubmit);
 
-function onFormSubmit(event) {
+async function onFormSubmit(event) {
   event.preventDefault();
   currentPage = 1;
   refs.gallery.innerHTML = '';
@@ -45,18 +53,15 @@ function onFormSubmit(event) {
   getImages(query)
     .then(data => {
       maxPage = Math.ceil(data.data.totalHits / perPage);
-
+      
       if (!data.data.hits.length) {
-        throw new Error(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
+        throw new Error();
       }
       renderCards(data.data.hits);
-
       refs.search.reset();
     })
     .catch(err => {
-      Notify.failure(`${err.message}`);
+      Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     });
 }
 
