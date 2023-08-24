@@ -2,13 +2,13 @@ import axios from 'axios';
 
 const BASEURL = 'https://pixabay.com/api/';
 
-export const perPage = 40;
-let page = 1;
+export const per_page = 40;
+export let page = 1;
 
-export async function getImages(query, page) {
+export async function getImages(query) {
   const params = new URLSearchParams({
     key: '39023312-2f71f46960a1d00fee06a2093',
-    perPage,
+    per_page,
     page,
     q: query,
     image_type: 'photo',
@@ -18,7 +18,10 @@ export async function getImages(query, page) {
   page += 1;
 
   try {
+
     const response = await axios.get(`${BASEURL}?${params}&q=${query}`);
+    console.log(response);
+    console.log(`${BASEURL}?${params}&q=${query}`);
     return response;
   } catch (error) {
     console.log(error);

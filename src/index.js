@@ -1,9 +1,10 @@
 import SimpleLightbox from 'simplelightbox';
 import '../node_modules/simplelightbox/dist/simple-lightbox.min.css';
 import { Notify } from 'notiflix';
-import { perPage } from './api.js';
+import { per_page } from './api.js';
 import { getImages } from './api.js';
 import { templateCard } from './api.js';
+import { page } from './api.js';
 
 const refs = {
   search: document.querySelector('.search-form'),
@@ -11,7 +12,6 @@ const refs = {
   observerTarget: document.querySelector('.js-observer'),
 };
 
-let page = 1;
 let maxPage = 1;
 let query = '';
 let currentPage = 1;
@@ -32,7 +32,7 @@ async function onFormSubmit(event) {
   } else {
     getImages(query)
       .then(data => {
-        maxPage = Math.ceil(data.data.totalHits / perPage);
+        maxPage = Math.ceil(data.data.totalHits / per_page);
         Notify.success(`You can see ${data.data.totalHits} images`);
         if (!data.data.hits.length) {
           throw new Error();
