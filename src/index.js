@@ -6,6 +6,7 @@ import { getImages } from './api.js';
 import { templateCard } from './api.js';
 import { page } from './api.js';
 
+
 const refs = {
   search: document.querySelector('.search-form'),
   gallery: document.querySelector('.gallery'),
