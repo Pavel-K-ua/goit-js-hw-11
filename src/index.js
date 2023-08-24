@@ -4,7 +4,6 @@ import { Notify } from 'notiflix';
 import { per_page } from './api.js';
 import { getImages } from './api.js';
 import { templateCard } from './api.js';
-import { page } from './api.js';
 
 
 const refs = {
@@ -16,6 +15,7 @@ const refs = {
 let maxPage = 1;
 let query = '';
 let currentPage = 1;
+let page = 1
 
 const lightbox = new SimpleLightbox('.gallery a');
 
