@@ -14,7 +14,6 @@ const refs = {
 
 let maxPage = 1;
 let query = '';
-let currentPage = 1;
 let page = 1
 
 const lightbox = new SimpleLightbox('.gallery a');
@@ -31,7 +30,7 @@ async function onFormSubmit(event) {
       'Sorry, there are no images matching your search query. Please try again.'
     );
   } else {
-    getImages(query)
+    getImages(query, page)
       .then(data => {
         maxPage = Math.ceil(data.data.totalHits / per_page);
         Notify.success(`You can see ${data.data.totalHits} images`);
@@ -39,6 +38,7 @@ async function onFormSubmit(event) {
           throw new Error();
         }
         renderCards(data.data.hits);
+        page += 1;
         refs.search.reset();
       })
       .catch(err => {
@@ -57,22 +57,22 @@ function renderCards(hits) {
 function callback(entries, observer) {
   entries.forEach(entry => {
     if (entry.isIntersecting && refs.gallery.innerHTML !== '') {
-      if (currentPage === maxPage) {
+      if (page === maxPage) {
         Notify.failure(
           "We're sorry, but you've reached the end of search results."
         );
         return;
       }
-      getImages(query)
+      getImages(query, page)
         .then(data => {
           if (!data.data.hits) {
             throw new Error(
               'Sorry, there are no images matching your search query. Please try again.'
             );
           }
-
+          page += 1;
           renderCards(data.data.hits);
-          currentPage += 1;
+          
         })
         .catch(err => {
           Notify.failure(

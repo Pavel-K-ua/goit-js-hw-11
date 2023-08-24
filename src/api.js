@@ -3,10 +3,9 @@ import axios from 'axios';
 const BASEURL = 'https://pixabay.com/api/';
 
 export const per_page = 40;
-let page = 1
+// let page = 1
 
-export async function getImages(query) {
-    // let page = 1;
+export async function getImages(query, page) {
   const params = new URLSearchParams({
     key: '39023312-2f71f46960a1d00fee06a2093',
     per_page,
@@ -16,13 +15,14 @@ export async function getImages(query) {
     orientation: 'horizontal',
     safesearch: true,
   });
+  
   page += 1;
 
   try {
 
     const response = await axios.get(`${BASEURL}?${params}&q=${query}`);
-    console.log(response);
-    console.log(`${BASEURL}?${params}&q=${query}`);
+    // console.log(response);
+    // console.log(`${BASEURL}?${params}&q=${query}`);
     return response;
   } catch (error) {
     console.log(error);
