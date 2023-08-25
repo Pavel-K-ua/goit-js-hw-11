@@ -24,7 +24,7 @@ async function onFormSubmit(event) {
   event.preventDefault();
   page = 1;
   refs.gallery.innerHTML = '';
-  query = event.target.elements.searchQuery.value;
+  query = event.target.elements.searchQuery.value.trim();
   if (!query) {
     Notify.failure(
       'Sorry, there are no images matching your search query. Please try again.'
