@@ -66,9 +66,7 @@ function callback(entries, observer) {
       getImages(query, page)
         .then(data => {
           if (!data.data.hits) {
-            throw new Error(
-              'Sorry, there are no images matching your search query. Please try again.'
-            );
+            throw new Error();
           }
           page += 1;
           renderCards(data.data.hits);
